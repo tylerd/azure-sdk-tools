@@ -49,7 +49,8 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Store
              new Guid("95dc44c2-7516-480b-9246-a636fcdb9bb5"),
              new Guid("d79f5602-33a6-4538-9376-d1ca9c2b4521"),
              new Guid("da8888b8-2418-499b-9c0e-38d328f9a0b2"),
-             new Guid("d653a682-cba2-456a-87b2-e9f01db09078")
+             new Guid("d653a682-cba2-456a-87b2-e9f01db09078"),
+             new Guid("7fdf958a-4bec-4904-aa89-42d678ebfc38")
         };
 
         //
@@ -66,7 +67,10 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Store
             new Guid("b5e616d3-34f4-4ebe-a02d-c56a62a4a2f2"),
  
             // Microsoft Translator
-            new Guid("059afc24-07de-4126-b004-4e42a51816fe")
+            new Guid("059afc24-07de-4126-b004-4e42a51816fe"),
+
+            // MetricsHub
+            new Guid("2f4108db-8ecb-473c-833e-589f5a1c234b")
         };
     }
 }
