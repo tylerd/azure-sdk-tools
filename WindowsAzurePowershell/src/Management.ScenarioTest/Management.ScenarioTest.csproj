@@ -123,6 +123,7 @@
     <Resource Include="Resources\Storage\StorageContext.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Compile Include="MediaServicesTests\MediaServicesTests.cs" />
     <Compile Include="ServiceBusTests\ServiceBusAuthorizationRuleTests.cs" />
     <Compile Include="StorageTests\StorageContainerTest.cs" />
     <Compile Include="StorageTests\StorageContextTest.cs" />
@@ -182,6 +183,9 @@
     <None Include="Resources\Emulatortests.ps1" />
     <None Include="Resources\GenerateCredstests.ps1" />
     <None Include="Resources\GenerateEmulatortests.ps1" />
+    <None Include="Resources\MediaServices\MediaServices.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\NodeEmulatorTests.ps1" />
     <None Include="Resources\PHPEmulatorTests.ps1" />
     <None Include="Resources\Scaffolding.ps1" />

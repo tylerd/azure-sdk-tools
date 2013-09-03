@@ -29,12 +29,12 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         private static string EnvironmentPathFormat = "testcredentials-{0}";
         private static string defaultCredentialFile = "default.publishsettings";
         private static string TestEnvironmentVariable = "AZURE_TEST_ENVIRONMENT";
-        public static string StorageAccountVariable = "AZURE_STORAGE_ACCOUNT";
-        public static string StorageAccountKeyVariable = "AZURE_STORAGE_ACCESS_KEY";
+        private static string StorageAccountVariable = "AZURE_STORAGE_ACCOUNT";
+        private static string StorageAccountKeyVariable = "AZURE_STORAGE_ACCESS_KEY";
         private static string DefaultStorageAccountVariable = "AZURERT_DEFAULT_STORAGE_ACCOUNT";
         private static string DefaultLocationVariable = "AZURERT_DEFAULT_LOCATION";
-        public static string CredentialBlobUriFormat = "https://{0}.blob.core.windows.net";
-        public static string CredentialImportFormat = "Import-AzurePublishSettingsFile '{0}'";
+        private static string CredentialBlobUriFormat = "https://{0}.blob.core.windows.net";
+        //private static string CredentialImportFormat = "Import-AzurePublishSettingsFile '{0}'";
         
         private static string publishSettingsFile = null;
         private static string defaultSubscriptionName = null;
@@ -205,6 +205,43 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             }
         }
 
+        public static void CopyTestData(string srcContainer, string srcBlob, string destContainer, string destBlob)
+        {
+            ServiceManagementCmdletTestHelper vmPowershellCmdlets = new ServiceManagementCmdletTestHelper();
+            Process currentProcess = Process.GetCurrentProcess();
+            StringDictionary environment = currentProcess.StartInfo.EnvironmentVariables;
 
+            string storageAccount = environment[CredentialHelper.StorageAccountVariable];
+            string storageAccountKey = environment[CredentialHelper.StorageAccountKeyVariable];
+
+            // Create a container
+            try
+            {
+                vmPowershellCmdlets.RunPSScript("Get-AzureStorageContainer -Name " + destContainer);
+            }
+            catch
+            {
+                // Create a container.
+                vmPowershellCmdlets.RunPSScript("New-AzureStorageContainer -Name " + destContainer);
+            }
+
+            // Make SAS Uri for the source blob.
+            string srcSasUri = Utilities.GenerateSasUri(CredentialHelper.CredentialBlobUriFormat, storageAccount, storageAccountKey, srcContainer, srcBlob);
+
+            vmPowershellCmdlets.RunPSScript(string.Format("Start-AzureStorageBlobCopy -SrcUri \"{0}\" -DestContainer {1} -DestBlob {2} -Force", srcSasUri, destContainer, destBlob));
+
+            for (int i = 0; i < 60; i++)
+            {
+                var result = vmPowershellCmdlets.CheckCopyBlobStatus(destContainer, destBlob);
+                if (result.Status.ToString().Equals("Success"))
+                {
+                    break;
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep(10 * 1000);
+                }
+            }
+        }
     }
 }

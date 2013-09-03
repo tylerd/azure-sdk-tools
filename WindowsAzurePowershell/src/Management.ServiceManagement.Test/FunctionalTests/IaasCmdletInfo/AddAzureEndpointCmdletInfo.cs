@@ -46,7 +46,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
                 this.cmdletParams.Add(new CmdletParam("LBSetName", endPointConfig.LBSetName));
                 this.cmdletParams.Add(new CmdletParam("NoProbe"));
             }
-            else if (endPointConfig.ParamSet == AzureEndPointConfigInfo.ParameterSet.CustonProbe)
+            else if (endPointConfig.ParamSet == AzureEndPointConfigInfo.ParameterSet.CustomProbe)
             {
                 this.cmdletParams.Add(new CmdletParam("LBSetName", endPointConfig.LBSetName));
                 this.cmdletParams.Add(new CmdletParam("ProbePort", endPointConfig.ProbePort));

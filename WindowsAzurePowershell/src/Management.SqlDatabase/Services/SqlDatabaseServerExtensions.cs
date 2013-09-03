@@ -15,8 +15,13 @@
 namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services
 {
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Xml;
+    using Microsoft.WindowsAzure.Management.SqlDatabase.Services.ImportExport;
 
+    /// <summary>
+    /// Method implementations for Sql Azure managment
+    /// </summary>
     public static partial class SqlDatabaseManagementExtensionMethods
     {
         /// <summary>
@@ -43,17 +48,22 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services
         /// <param name="subscriptionId">
         /// The subscription id in which to create the new server.
         /// </param>
-        /// <param name="adminLogin">
+        /// <param name="administratorLogin">
         /// The administrator login name for the new server.
         /// </param>
-        /// <param name="adminLoginPassword">
+        /// <param name="administratorLoginPassword">
         /// The administrator login password for the new server.
         /// </param>
         /// <param name="location">
         /// The location in which to create the new server.
         /// </param>
         /// <returns>The XmlElement with the new server information.</returns>
-        public static XmlElement NewServer(this ISqlDatabaseManagement proxy, string subscriptionId, string administratorLogin, string administratorLoginPassword, string location)
+        public static XmlElement NewServer(
+            this ISqlDatabaseManagement proxy, 
+            string subscriptionId, 
+            string administratorLogin, 
+            string administratorLoginPassword, 
+            string location)
         {
             var input = new NewSqlDatabaseServerInput()
             {
@@ -121,6 +131,81 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services
             var el = (XmlElement)doc.FirstChild.NextSibling;
 
             proxy.EndSetPassword(proxy.BeginSetPassword(subscriptionId, serverName, el, null, null));
+        }
+
+        /// <summary>
+        /// Exports a database into blob storage
+        /// </summary>
+        /// <param name="proxy">Channel used for communication with Azure's service management APIs.</param>
+        /// <param name="subscriptionId">The subscription ID in which the server resides</param>
+        /// <param name="serverName">The name of the server that contains the database</param>
+        /// <param name="input">The input data for the export operation</param>
+        /// <returns>An <see cref="XmlElement"/> containing the request ID (GUID).</returns>
+        public static XmlElement ExportDatabase(
+            this ISqlDatabaseManagement proxy, 
+            string subscriptionId, 
+            string serverName, 
+            ExportInput input)
+        {
+            return proxy.EndExportDatabase(proxy.BeginExportDatabase(
+                subscriptionId, 
+                serverName, 
+                input, 
+                null, 
+                null));
+        }
+
+        /// <summary>
+        /// Imports a database from blob storage
+        /// </summary>
+        /// <param name="proxy">Channel used for communication with Azure's service management APIs</param>
+        /// <param name="subscriptionId">The subscription ID in which the server resides</param>
+        /// <param name="serverName">The name of the server to put the database in</param>
+        /// <param name="input">The input data for the import operation</param>
+        /// <returns>An <see cref="XmlElement"/> containing the request ID (GUID).</returns>
+        public static XmlElement ImportDatabase(
+            this ISqlDatabaseManagement proxy,
+            string subscriptionId,
+            string serverName,
+            ImportInput input)
+        {
+            return proxy.EndImportDatabase(proxy.BeginImportDatabase(
+                subscriptionId,
+                serverName,
+                input,
+                null,
+                null));
+        }
+
+        /// <summary>
+        /// Gets the status of an import/export operation
+        /// </summary>
+        /// <param name="proxy">Channel used for communication with Azure's service management APIs.</param>
+        /// <param name="subscriptionId">The subscription ID in which the server resides</param>
+        /// <param name="serverName">The name of the server that contains the database</param>
+        /// <param name="userName">The username to connect to the server</param>
+        /// <param name="password">The password to connect to the server</param>
+        /// <param name="requestId">The request Id of the import/export operation</param>
+        /// <returns>A <see cref="ArrayOfStatusInfo"/> object containting the import/export status</returns>
+        public static ArrayOfStatusInfo GetImportExportStatus(
+            this ISqlDatabaseManagement proxy,
+            string subscriptionId,
+            string serverName,
+            string fullyQualifiedServerName,
+            string userName,
+            string password,
+            string requestId)
+        {
+            return proxy.EndGetImportExportStatus(
+                proxy.BeginGetImportExportStatus(
+                    subscriptionId,
+                    serverName,
+                    fullyQualifiedServerName,
+                    userName,
+                    password,
+                    requestId,
+                    null,
+                    null));
         }
     }
 }

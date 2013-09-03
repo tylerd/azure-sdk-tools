@@ -16,11 +16,14 @@
 namespace Microsoft.WindowsAzure.Management.ServiceManagement.Helpers
 {
     using System;
+    using System.Linq;
     using System.IO;
     using System.Xml.Serialization;
     using Model;
     using WindowsAzure.ServiceManagement;
     using Properties;
+    using System.Text.RegularExpressions;
+    using System.Management.Automation;
 
     public static class PersistentVMHelper
     {
@@ -70,6 +73,40 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Helpers
             }
 
             return role;
+        }
+
+        // Returns a RoleNamesCollection based on instances in the roleInstanceList
+        // whose RoleInstance.RoleName matches the roleName passed in.  Wildcards
+        // are handled for the roleName passed in.
+        // This function also verifies that the RoleInstance exists before adding the
+        // RoleName to the RoleNamesCollection.
+        public static RoleNamesCollection GetRoleNames(RoleInstanceList roleInstanceList, string roleName)
+        {
+            var roleNamesCollection = new RoleNamesCollection();
+            if (!string.IsNullOrEmpty(roleName))
+            {
+                if (WildcardPattern.ContainsWildcardCharacters(roleName))
+                {
+                    WildcardOptions wildcardOptions = WildcardOptions.IgnoreCase | WildcardOptions.Compiled;
+                    WildcardPattern wildcardPattern = new WildcardPattern(roleName, wildcardOptions);
+
+                    foreach (RoleInstance role in roleInstanceList)
+                        if (!string.IsNullOrEmpty(role.RoleName) && wildcardPattern.IsMatch(role.RoleName))
+                        {
+                            roleNamesCollection.Add(role.RoleName);
+                        }
+                }
+                else
+                {
+                    var roleInstance = roleInstanceList.Where(r => r.RoleName != null).
+                        FirstOrDefault(r => r.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
+                    if (roleInstance != null)
+                    {
+                        roleNamesCollection.Add(roleName);
+                    }
+                }
+            }
+            return roleNamesCollection;
         }
     }
 }

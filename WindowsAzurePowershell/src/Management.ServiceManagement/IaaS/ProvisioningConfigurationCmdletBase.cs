@@ -12,24 +12,29 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.WindowsAzure.Management.ServiceManagement.Helpers;
 
 namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
 {
+    using System;
     using System.Management.Automation;
-    using Microsoft.WindowsAzure.ServiceManagement;
     using System.Security.Cryptography.X509Certificates;
+    using Helpers;
+    using WindowsAzure.ServiceManagement;
     
     public class ProvisioningConfigurationCmdletBase : PSCmdlet
     {
-        [Parameter(Mandatory = true, ParameterSetName = "Linux", HelpMessage = "Set configuration to Linux.")]
+        public const string LinuxParameterSetName = OS.Linux;
+        public const string WindowsParameterSetName = OS.Windows;
+        public const string WindowsDomainParameterSetName = "WindowsDomain";
+
+        [Parameter(Mandatory = true, ParameterSetName = LinuxParameterSetName, HelpMessage = "Set configuration to Linux.")]
         public SwitchParameter Linux
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "Linux", HelpMessage = "User to Create")]
+        [Parameter(Mandatory = true, ParameterSetName = LinuxParameterSetName, HelpMessage = "User to Create")]
         [ValidateNotNullOrEmpty]
         public string LinuxUser
         {
@@ -37,43 +42,50 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Linux", HelpMessage = "Disable SSH Password Authentication.")]
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "Disable SSH Password Authentication.")]
         public SwitchParameter DisableSSH
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Linux", HelpMessage = "Do not create an SSH Endpoint.")]
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "Do not create an SSH Endpoint.")]
         public SwitchParameter NoSSHEndpoint
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Linux", HelpMessage = "SSH Public Key List")]
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "Allow to create passwordless VM")]
+        public SwitchParameter NoSSHPassword
+        {
+            get;
+            set;
+        }
+
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "SSH Public Key List")]
         public LinuxProvisioningConfigurationSet.SSHPublicKeyList SSHPublicKeys
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Linux", HelpMessage = "SSH Key Pairs")]
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "SSH Key Pairs")]
         public LinuxProvisioningConfigurationSet.SSHKeyPairList SSHKeyPairs
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "Windows", HelpMessage = "Set configuration to Windows.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsParameterSetName, HelpMessage = "Set configuration to Windows.")]
         public SwitchParameter Windows
         {
             get;
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "Windows", HelpMessage = "Specifies the Administrator to create.")]
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Specifies the Administrator to create.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsParameterSetName, HelpMessage = "Specifies the Administrator to create.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Specifies the Administrator to create.")]
         [ValidateNotNullOrEmpty]
         public string AdminUsername
         {
@@ -81,16 +93,16 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Set configuration to Windows with Domain Join.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Set configuration to Windows with Domain Join.")]
         public SwitchParameter WindowsDomain
         {
             get;
             set;
         }
         
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Administrator password to use for the role.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Administrator password to use for the role.")]
-        [Parameter(Mandatory = true, ParameterSetName = "Linux", HelpMessage = "Default password for linux user created.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Administrator password to use for the role.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Administrator password to use for the role.")]
+        [Parameter(Mandatory = false, ParameterSetName = LinuxParameterSetName, HelpMessage = "Default password for linux user created.")]
         [ValidateNotNullOrEmpty]
         public string Password
         {
@@ -98,8 +110,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Specify to force the user to change the password on first logon.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Specify to force the user to change the password on first logon.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Specify to force the user to change the password on first logon.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Specify to force the user to change the password on first logon.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter ResetPasswordOnFirstLogon
         {
@@ -107,8 +119,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Disable Automatic Updates.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Disable Automatic Updates.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Disable Automatic Updates.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Disable Automatic Updates.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter DisableAutomaticUpdates
         {
@@ -116,8 +128,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Do No Create an RDP Endpoint.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Do Not Create an RDP Endpoint.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Do No Create an RDP Endpoint.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Do Not Create an RDP Endpoint.")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter NoRDPEndpoint
         {
@@ -125,8 +137,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Specify the time zone for the virtual machine.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Specify the time zone for the virtual machine.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Specify the time zone for the virtual machine.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Specify the time zone for the virtual machine.")]
         [ValidateNotNullOrEmpty]
         public string TimeZone
         {
@@ -134,8 +146,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Set of certificates to install in the VM.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Set of certificates to install in the VM.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Set of certificates to install in the VM.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Set of certificates to install in the VM.")]
         [ValidateNotNullOrEmpty]
         public CertificateSettingList Certificates
         {
@@ -143,7 +155,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Domain to join (FQDN).")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Domain to join (FQDN).")]
         [ValidateNotNullOrEmpty]
         public string JoinDomain
         {
@@ -151,7 +163,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Domain name.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Domain name.")]
         [ValidateNotNullOrEmpty]
         public string Domain
         {
@@ -159,7 +171,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Domain user name.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Domain user name.")]
         [ValidateNotNullOrEmpty]
         public string DomainUserName
         {
@@ -167,7 +179,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WindowsDomain", HelpMessage = "Domain password.")]
+        [Parameter(Mandatory = true, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Domain password.")]
         [ValidateNotNullOrEmpty]
         public string DomainPassword
         {
@@ -175,7 +187,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Machine object organization unit.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Machine object organization unit.")]
         [ValidateNotNullOrEmpty]
         public string MachineObjectOU
         {
@@ -183,8 +195,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Enables WinRM over http")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Enables WinRM over http")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Enables WinRM over http")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Enables WinRM over http")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter EnableWinRMHttp
         {
@@ -192,8 +204,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Disables WinRM on http/https")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Disables WinRM on http/https")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Disables WinRM on http/https")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Disables WinRM on http/https")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter DisableWinRMHttps
         {
@@ -201,8 +213,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Certificate that will be associated with WinRM endpoint.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Certificate that will be associated with WinRM endpoint.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Certificate that will be associated with WinRM endpoint.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Certificate that will be associated with WinRM endpoint.")]
         [ValidateNotNullOrEmpty]
         public X509Certificate2 WinRMCertificate
         {
@@ -210,8 +222,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "X509Certificates that will be deployed to hosted service.")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "X509Certificates that will be deployed to hosted service.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "X509Certificates that will be deployed to hosted service.")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "X509Certificates that will be deployed to hosted service.")]
         [ValidateNotNullOrEmpty]
         public X509Certificate2[] X509Certificates
         {
@@ -219,8 +231,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Prevents the private key from being uploaded")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Prevents the private key from being uploaded")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Prevents the private key from being uploaded")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Prevents the private key from being uploaded")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter NoExportPrivateKey
         {
@@ -228,8 +240,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
             set;
         }
 
-        [Parameter(Mandatory = false, ParameterSetName = "Windows", HelpMessage = "Prevents the WinRM endpoint from being added")]
-        [Parameter(Mandatory = false, ParameterSetName = "WindowsDomain", HelpMessage = "Prevents the WinRM endpoint from being added")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsParameterSetName, HelpMessage = "Prevents the WinRM endpoint from being added")]
+        [Parameter(Mandatory = false, ParameterSetName = WindowsDomainParameterSetName, HelpMessage = "Prevents the WinRM endpoint from being added")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter NoWinRMEndpoint
         {
@@ -241,8 +253,12 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
         {
             provisioningConfiguration.UserName = LinuxUser;
             provisioningConfiguration.UserPassword = Password;
+            if (NoSSHPassword.IsPresent)
+            {
+                provisioningConfiguration.UserPassword = String.Empty;
+            }
 
-            if (DisableSSH.IsPresent)
+            if (DisableSSH.IsPresent || NoSSHPassword.IsPresent)
             {
                 provisioningConfiguration.DisableSshPasswordAuthentication = true;
             }
@@ -270,7 +286,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
                 provisioningConfiguration.TimeZone = TimeZone;
             }
 
-            if (ParameterSetName == "WindowsDomain")
+            if (WindowsDomainParameterSetName.Equals(ParameterSetName, StringComparison.OrdinalIgnoreCase))
             {
                 provisioningConfiguration.DomainJoin = new WindowsProvisioningConfigurationSet.DomainJoinSettings
                 {

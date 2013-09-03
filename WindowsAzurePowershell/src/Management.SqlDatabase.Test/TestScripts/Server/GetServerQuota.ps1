@@ -46,7 +46,7 @@ Param
 
 $isTestPass = $False
 
-Write-Output "`$subscriptionID=$subscriptionID"
+Write-Output "`$subscriptionID=$subscriptionID" 
 Write-Output "`$SerializedCert=$SerializedCert"
 Write-Output "`$serverLocation=$serverLocation"
 

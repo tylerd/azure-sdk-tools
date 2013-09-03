@@ -34,7 +34,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         [ClassInitialize]        
         public static void ClassInit(TestContext context)
         {
-            SetTestSettings();
+            //SetTestSettings();
 
             if (defaultAzureSubscription.Equals(null))
             {
@@ -47,7 +47,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             {
                 try
                 {
-                    CopyTestData(testDataContainer, osVhdName, vhdContainerName, vhdName);
+                    CredentialHelper.CopyTestData(testDataContainer, osVhdName, vhdContainerName, vhdName);
                 }
                 catch (Exception e)
                 {
@@ -79,7 +79,6 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         [TestInitialize]
         public void Initialize()
         {
-            ReImportSubscription();
             pass = true;
             testStartTime = DateTime.Now;
             storageAccountKey = vmPowershellCmdlets.GetAzureStorageAccountKey(defaultAzureSubscription.CurrentStorageAccount);  

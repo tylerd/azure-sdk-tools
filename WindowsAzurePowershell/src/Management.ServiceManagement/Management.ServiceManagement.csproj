@@ -212,6 +212,7 @@
     </Compile>
     <Compile Include="Helpers\CertUtils.cs" />
     <Compile Include="Helpers\Disks.cs" />
+    <Compile Include="Helpers\OS.cs" />
     <Compile Include="Helpers\PersistentVMHelper.cs" />
     <Compile Include="HostedServices\GetAzureDeployment.cs" />
     <Compile Include="HostedServices\GetAzureOSVersion.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="IaaS\Network\SetAzureVNetGateway.cs" />
     <Compile Include="IaaS\IaaSDeploymentManagementCmdletBase.cs" />
     <Compile Include="IaaS\PersistentVMs\AddAzureProvisioningConfig.cs" />
+    <Compile Include="Helpers\ConfigurationSetsBuilder.cs" />
     <Compile Include="IaaS\PersistentVMs\ExportAzureVM.cs" />
     <Compile Include="IaaS\PersistentVMs\GetAzureOSDisk.cs" />
     <Compile Include="IaaS\PersistentVMs\GetAzureRemoteDesktopFile.cs" />

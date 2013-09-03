@@ -46,15 +46,15 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         }
 
         /// <summary>
-        /// UploadDisk: 
+        /// UploadDisk:
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\upload_VHD.csv", "upload_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDisk()
         {
-           
+
             StartTest(MethodBase.GetCurrentMethod().Name, testStartTime);
-            
+
             // Choose the vhd file from local machine
             string vhdName = Convert.ToString(TestContext.DataRow["vhdName"]);
             FileInfo vhdLocalPath = new FileInfo(Directory.GetCurrentDirectory() + "\\" + vhdName);
@@ -77,12 +77,12 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             AssertUploadContextAndContentMD5UsingSaveVhd(vhdDestUri, vhdLocalPath, vhdUploadContext, md5hash);
 
             pass = true;
-        }       
+        }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\overwrite_VHD.csv", "overwrite_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskOverwrite()
         {
@@ -91,8 +91,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
 
 
             // Choose the vhd file from local machine
-            var vhdName = Convert.ToString(TestContext.DataRow["vhdName"]);           
-            var vhdLocalPath = new FileInfo(Directory.GetCurrentDirectory() + "\\" + vhdName);            
+            var vhdName = Convert.ToString(TestContext.DataRow["vhdName"]);
+            var vhdLocalPath = new FileInfo(Directory.GetCurrentDirectory() + "\\" + vhdName);
             Assert.IsTrue(File.Exists(vhdLocalPath.FullName), "VHD file not exist={0}", vhdLocalPath);
 
             // Get the pre-calculated MD5 hash of the fixed vhd that was converted from the original vhd.
@@ -115,15 +115,15 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             DateTime testEndTime = DateTime.Now;
             Console.WriteLine("{0} test passed at {1}.", testName, testEndTime);
             Console.WriteLine("Duration of the test pass: {0} seconds", (testEndTime-testStartTime).TotalSeconds);
-            
+
             System.IO.File.AppendAllLines(perfFile, new string[] { String.Format("{0},{1}", testName, (testEndTime-testStartTime).TotalSeconds) });
 
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\overwrite_VHD.csv", "overwrite_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskResume()
         {
@@ -160,7 +160,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             else
             {
                 Console.WriteLine("didn't stop!");
-            }            
+            }
 
             DateTime testEndTime = DateTime.Now;
             Console.WriteLine("{0} test passed at {1}.", testName, testEndTime);
@@ -168,11 +168,11 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
 
             System.IO.File.AppendAllLines(perfFile, new string[] { String.Format("{0},{1}", testName, (testEndTime - testStartTime).TotalSeconds) });
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\overwrite_VHD.csv", "overwrite_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskOverwriteNonExist()
         {
@@ -210,9 +210,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\overwrite_VHD.csv", "overwrite_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskSecondWithoutOverwrite()
         {
@@ -258,9 +258,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\thread_VHD.csv", "thread_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskThreadNumber()
         {
@@ -295,9 +295,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\thread_VHD.csv", "thread_VHD#csv", DataAccessMethod.Sequential)]
         public void UploadDiskThreadNumberOverwrite()
         {
@@ -333,9 +333,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\patch_VHD.csv", "patch_VHD#csv", DataAccessMethod.Sequential)]
         public void PatchFirstLevelDifferencingDisk()
         {
@@ -374,7 +374,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             string childVhdDestUri = blobUrlRoot + childVhdBlobName;
 
             // Start uploading the child vhd...
-            Console.WriteLine("uploads {0} to {1}", childVhdName, childVhdBlobName);            
+            Console.WriteLine("uploads {0} to {1}", childVhdName, childVhdBlobName);
             var patchVhdUploadContext = vmPowershellCmdlets.AddAzureVhd(childVhdLocalPath, childVhdDestUri, vhdDestUri);
             Console.WriteLine("uploading completed: {0}", childVhdName);
 
@@ -388,7 +388,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             System.IO.File.AppendAllLines(perfFile, new string[] { String.Format("{0},{1}", testName, (testEndTime - testStartTime).TotalSeconds) });
         }
 
-        [TestMethod(), TestCategory("Functional"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
+        [TestMethod(), TestCategory("Sequential"), TestProperty("Feature", "IAAS"), Priority(1), Owner("hylee"), Description("Test the cmdlet (Add-AzureVhd)")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\Resources\\thread_VHD.csv", "thread_VHD#csv", DataAccessMethod.Sequential)]
         public void WrongProtocolShouldFail()
         {
@@ -427,11 +427,11 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
                 System.IO.File.AppendAllLines(perfFile, new string[] { String.Format("{0},{1}", testName, (testEndTime - testStartTime).TotalSeconds) });
             }
         }
-               
+
         [TestCleanup]
         public virtual void CleanUp()
         {
-            Console.WriteLine("Test {0}", pass ? "passed" : "failed");                        
+            Console.WriteLine("Test {0}", pass ? "passed" : "failed");
         }
     }
 }

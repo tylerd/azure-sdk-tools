@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SqlDatabaseSetting>
     <ServerLocation>Onebox</ServerLocation>
+    <SubscriptionId>2cab5796-d063-4da1-838e-f9601d91d36e</SubscriptionId>
     <ManageUrl>https://testserver.dev.mscds.com</ManageUrl>
     <SqlAuthUserName>testuser</SqlAuthUserName>
     <SqlAuthPassword>testp@ss1</SqlAuthPassword>
-    <SubscriptionID>4dd1c538-b12a-4393-aa7f-175fef0336a2</SubscriptionID>
     <SerializedCert>AgAAAAEAAAC8AAAAHAAAAGwAAAABAAAAAAAAAAAAAAAAAAAAAQAAAHsANQA2AEUARAA2ADkAMQA5AC0AQwAxADUARQAtADQARAAwADQALQBBAEEAOABFAC0AOQBEADUARgBDAEQAQQA3AEMARgA5ADgAfQAAAAAATQBpAGMAcgBvAHMAbwBmAHQAIABTAHQAcgBvAG4AZwAgAEMAcgB5AHAAdABvAGcAcgBhAHAAaABpAGMAIABQAHIAbwB2AGkAZABlAHIAAAAgAAAAAQAAABgDAAAwggMUMIICAKADAgECAhAmnynD41waqEZbF7fAcQ5vMAkGBSsOAwIdBQAwHzEdMBsGA1UEAxMUVGVzdEF6dXJlQ2VydGlmaWNhdGUwHhcNMTMwNTE1MTYzNDA3WhcNMzkxMjMxMjM1OTU5WjAfMR0wGwYDVQQDExRUZXN0QXp1cmVDZXJ0aWZpY2F0ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL577A8CERReaiR+mslM5+1TrtOXIdRvpypcgBxBEcxh3VFvxTyWEKmd1U+we8shcarCRAEtf3jbvp+OY+nYANChKzQCZBafEIiqHP7BT4biA4RGVToxetYmu4S0NbC6yapQtQCevsGy5jaiX4mJVsZe0sQIHUMtxiazKbHWhkEXq6/GaIvx0KyVcM7pWpfefzMnJNDtqPuES9cGruaXIFsod9/W2mZf525/KV69JmatNOyW9C7uLZE8F4p8bCu0+LcVndDCjDASSPz5GQcTGUo9jncglWE4WTCl+M7cuZIhRouVg3+kousu6Gd+0d7YhfhPyac3V62TP9QGHPVEaf8CAwEAAaNUMFIwUAYDVR0BBEkwR4AQyRtCycb6fog5uWTB/AE5EaEhMB8xHTAbBgNVBAMTFFRlc3RBenVyZUNlcnRpZmljYXRlghAmnynD41waqEZbF7fAcQ5vMAkGBSsOAwIdBQADggEBAEcSu4mu16PuCW8DbUudCPaNtWDnV0T2M9xMZDZAQbL4uSphyIKL42mjFiUhblRsd7WbYJ4b9e3yuAYEMg3FhyJhxuiGrvh4Hvr0+M+tSk0VDCheGpnTpsrBIHSMY53udXctL0Pc6cOWFnga2G3MbrpSEpKtdCGH5vU+TJAARwT6eIvNBhliw8aRG30xYlfvlsUCxqm6ik4NhQJSq+HyVZjRfwu7eyY4zFEVpKAO7cCgm56fTdcfVtNwKCN2S8IaceFyN7KhsJE1LKCX9s5EKGQel58HDU06R0+ADp2Z53NZqcKVap4dsZQdB0fTPfpsLnjiAC9QeUBmZYNPzP/ISKY=</SerializedCert>
+    <ImportExport>
+        <ServerLocation>West US</ServerLocation>
+        <SubscriptionId>469e47e3-ec58-4fe7-a5d0-44bbba72e540</SubscriptionId>
+        <ContainerName>ietestcontainer</ContainerName>
+        <StorageName>ieteststorage</StorageName>
+        <AccessKey>aGBQGGOEeuI8oFlNunbdgnJcu6Xa/qBCPrRIoTIXmnqiEcoWF+s/4U2QS5i+0Nqa1aHP6HxaupaLkQSHDQttkw==</AccessKey>
+    </ImportExport>
 </SqlDatabaseSetting>

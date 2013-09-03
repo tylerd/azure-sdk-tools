@@ -180,6 +180,13 @@
     <Compile Include="Environment\RemoveAzureEnvironmentTests.cs" />
     <Compile Include="Environment\SetAzureEnvironmentTests.cs" />
     <Compile Include="Environment\GetAzureEnvironmentTests.cs" />
+    <Compile Include="MediaServices\FakeHttpContent.cs" />
+    <Compile Include="MediaServices\FakeHttpMessageHandler.cs" />
+    <Compile Include="MediaServices\GetAzureMediaServicesTests.cs" />
+    <Compile Include="MediaServices\NewAzureMediaServicesKeyTest.cs" />
+    <Compile Include="MediaServices\NewMediaServicesAccountTests.cs" />
+    <Compile Include="MediaServices\RemoveMediaServicesAccountTests.cs" />
+    <Compile Include="MediaServices\MediaServicesClientTests.cs" />
     <Compile Include="ServiceBus\GetAzureSBLocationTest.cs" />
     <Compile Include="ServiceBus\GetAzureSBNamespaceTest.cs" />
     <Compile Include="ServiceBus\NewAzureSBNamespaceTest.cs" />

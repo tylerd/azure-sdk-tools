@@ -368,7 +368,7 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Properties {
         ///    &lt;dataCacheClient name=&quot;DefaultShimConfig&quot; useLegacyProtocol=&quot;false&quot;&gt;
         ///      &lt;autoDiscover isEnabled=&quot;true&quot; identifier=&quot;$RoleName$&quot; /&gt;
         ///    &lt;/dataCacheClient&gt;
-        ///  &lt;/da [rest of string was truncated]&quot;;.
+        ///  &lt;/dataCacheCl [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CacheAutoDiscoveryConfig {
             get {
@@ -1071,6 +1071,15 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EndPoint can&apos;t be retrieved for storage account.
+        /// </summary>
+        internal static string EndPointNotFoundForBlobStorage {
+            get {
+                return ResourceManager.GetString("EndPointNotFoundForBlobStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} end processing..
         /// </summary>
         internal static string EndProcessingLog {
@@ -1432,6 +1441,15 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Properties {
         internal static string InvalidManifestError {
             get {
                 return ResourceManager.GetString("InvalidManifestError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The account {0} was not found. Please specify a valid account name..
+        /// </summary>
+        internal static string InvalidMediaServicesAccount {
+            get {
+                return ResourceManager.GetString("InvalidMediaServicesAccount", resourceCulture);
             }
         }
         
@@ -2542,6 +2560,24 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to regenerate key?.
+        /// </summary>
+        internal static string RegenerateKeyWarning {
+            get {
+                return ResourceManager.GetString("RegenerateKeyWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate new key..
+        /// </summary>
+        internal static string RegenerateKeyWhatIfMessage {
+            get {
+                return ResourceManager.GetString("RegenerateKeyWhatIfMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Add-On Confirmation.
         /// </summary>
         internal static string RemoveAddOnConformation {
@@ -2592,6 +2628,24 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Properties {
         internal static string RemoveDeploymentWaitMessage {
             get {
                 return ResourceManager.GetString("RemoveDeploymentWaitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove the account?.
+        /// </summary>
+        internal static string RemoveMediaAccountWarning {
+            get {
+                return ResourceManager.GetString("RemoveMediaAccountWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account removed..
+        /// </summary>
+        internal static string RemoveMediaAccountWhatIfMessage {
+            get {
+                return ResourceManager.GetString("RemoveMediaAccountWhatIfMessage", resourceCulture);
             }
         }
         

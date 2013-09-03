@@ -18,6 +18,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Xml;
+    using Microsoft.WindowsAzure.Management.SqlDatabase.Services.ImportExport;
 
     /// <summary>
     /// The Windows Azure SQL Database related part of the external API
@@ -228,5 +229,93 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services
         /// </summary>
         /// <param name="asyncResult">The web request result</param>
         void EndRemoveDatabase(IAsyncResult asyncResult);
+
+
+        /// <summary>
+        /// Exports a database to blob storage
+        /// </summary>
+        /// <param name="subscriptionId">The subscription id that the server belongs to</param>
+        /// <param name="serverName">The name of the server the database resides in</param>
+        /// <param name="input">An <see cref="ExportInput"/> object containing connection info</param>
+        /// <param name="callback">The async callback object</param>
+        /// <param name="state">the state object</param>
+        /// <returns>An <see cref="IAsyncResult"/> for the web request</returns>
+        [OperationContract(AsyncPattern = true)]
+        [WebInvoke(Method = "POST",
+            UriTemplate = @"{subscriptionId}/services/sqlservers/servers/{serverName}/DacOperations/Export")]
+        IAsyncResult BeginExportDatabase(
+            string subscriptionId,
+            string serverName,
+            ExportInput input,
+            AsyncCallback callback,
+            object state);
+
+        /// <summary>
+        /// Finishes the web request to export database to blob storage
+        /// </summary>
+        /// <param name="asyncResult">The <see cref="IAsyncResult"/> of the call to: 
+        /// BeginExportDatabase</param>
+        /// <returns>An <see cref="XmlElement"/> that contains the request ID of the operation</returns>
+        XmlElement EndExportDatabase(IAsyncResult asyncResult);
+
+        /// <summary>
+        /// Initiates importing a database from blob storage
+        /// </summary>
+        /// <param name="subscriptionId">The subscription id that the server belongs to</param>
+        /// <param name="serverName">The name of the server to import the database into</param>
+        /// <param name="input">An <see cref="ExportInput"/> object containing connection info</param>
+        /// <param name="callback">The async callback object</param>
+        /// <param name="state">the state object</param>
+        [OperationContract(AsyncPattern = true)]
+        [WebInvoke(Method = "POST",
+            UriTemplate = @"{subscriptionId}/services/sqlservers/servers/{serverName}/DacOperations/Import")]
+        IAsyncResult BeginImportDatabase(
+            string subscriptionId,
+            string serverName,
+            ImportInput input,
+            AsyncCallback callback,
+            object state);
+
+        /// <summary>
+        /// Ends the call to BeginImportDatabase.  
+        /// </summary>
+        /// <param name="asyncResult">The result of calling BeginImportDatabase</param>
+        /// <returns>An <see cref="XmlElement"/> that contains the GUID for the import operation</returns>
+        XmlElement EndImportDatabase(IAsyncResult asyncResult);
+
+        /// <summary>
+        /// Gets the status of an import/export operation
+        /// </summary>
+        /// <param name="subscriptionId">The subscription id that the server belongs to</param>
+        /// <param name="serverName">The name of the server the database resides in</param>
+        /// <param name="fullyQualifiedServerName">The fully qualified server name</param>
+        /// <param name="userName">The username to connect to the database</param>
+        /// <param name="password">The password to connect to the database</param>
+        /// <param name="requestId">The request ID for the operation to query</param>
+        /// <param name="callback">The async callback object</param>
+        /// <param name="state">The state object</param>
+        /// <returns>An <see cref="IAsyncResult"/> for the web request</returns>
+        [OperationContract(AsyncPattern = true)]
+        [WebInvoke(Method = "GET",
+            UriTemplate = @"{subscriptionId}/services/sqlservers/servers/{serverName}/DacOperations"
+            + "/Status?servername={fullyQualifiedServerName}&username={userName}&password={password}" +
+            "&reqId={requestId}")]
+        IAsyncResult BeginGetImportExportStatus(
+            string subscriptionId,
+            string serverName,
+            string fullyQualifiedServerName,
+            string userName,
+            string password, 
+            string requestId,
+            AsyncCallback callback,
+            object state);
+
+        /// <summary>
+        /// Finishes the web request to get the import/export operation status
+        /// </summary>
+        /// <param name="asyncResult">The result of calling <see cref="BeginGetImportExportStatus"/>
+        /// </param>
+        /// <returns>An <see cref="ArrayOfStatusInfo"/> object</returns>
+        ArrayOfStatusInfo EndGetImportExportStatus(IAsyncResult asyncResult);
     }
 }

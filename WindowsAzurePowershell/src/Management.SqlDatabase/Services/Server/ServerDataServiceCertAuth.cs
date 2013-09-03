@@ -15,6 +15,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Security.Cryptography.X509Certificates;
     using Microsoft.WindowsAzure.Management.Utilities.Common;
 
@@ -174,7 +175,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
             Database result = new Database()
             {
                 CollationName = response.CollationName,
-                CreationDate = DateTime.Parse(response.CreationDate),
+                CreationDate = DateTime.Parse(response.CreationDate, CultureInfo.InvariantCulture),
                 Edition = response.Edition,
                 Id = int.Parse(response.Id),
                 IsFederationRoot = bool.Parse(response.IsFederationRoot),
@@ -203,7 +204,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
             }
             if (!string.IsNullOrEmpty(response.ServiceObjectiveAssignmentSuccessDate))
             {
-                result.ServiceObjectiveAssignmentSuccessDate = DateTime.Parse(response.ServiceObjectiveAssignmentSuccessDate);
+                result.ServiceObjectiveAssignmentSuccessDate = DateTime.Parse(response.ServiceObjectiveAssignmentSuccessDate, CultureInfo.InvariantCulture);
             }
             if (!string.IsNullOrEmpty(response.ServiceObjectiveId))
             {

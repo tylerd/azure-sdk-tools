@@ -15,11 +15,9 @@
 namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
 {
     using System;
-    using System.Linq;
     using System.Management.Automation;
     using System.Collections.Generic;
     using System.Security.Cryptography.X509Certificates;
-    using WindowsAzure.ServiceManagement;
     using Common;
     using Model;
     using Helpers;
@@ -28,7 +26,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
     /// <summary>
     /// Updates a persistent VM object with a provisioning configuration.
     /// </summary>
-    [Cmdlet(VerbsCommon.Add, "AzureProvisioningConfig", DefaultParameterSetName = "Windows"), OutputType(typeof(IPersistentVM))]
+    [Cmdlet(VerbsCommon.Add, "AzureProvisioningConfig", DefaultParameterSetName = WindowsParameterSetName), OutputType(typeof(IPersistentVM))]
     public class AddAzureProvisioningConfigCommand : ProvisioningConfigurationCmdletBase
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Virtual Machine to update.")]
@@ -43,141 +41,43 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
         internal void ExecuteCommand()
         {
             var role = VM.GetInstance();
-
+            var configSetbuilder = new ConfigurationSetsBuilder(role.ConfigurationSets);
             if (Linux.IsPresent)
             {
-                var provisioningConfiguration = role.ConfigurationSets
-                    .OfType<LinuxProvisioningConfigurationSet>()
-                    .SingleOrDefault();
-
-                if (provisioningConfiguration == null)
-                {
-                    provisioningConfiguration = new LinuxProvisioningConfigurationSet();
-                    role.ConfigurationSets.Add(provisioningConfiguration);
-                }
-
-                SetProvisioningConfiguration(provisioningConfiguration);
-                provisioningConfiguration.HostName = role.RoleName;
+                role.NoSSHEndpoint = NoSSHEndpoint.IsPresent;
+                SetProvisioningConfiguration(configSetbuilder.LinuxConfigurationBuilder.Provisioning);
+                configSetbuilder.LinuxConfigurationBuilder.Provisioning.HostName = role.RoleName;
 
                 if (DisableSSH.IsPresent == false || NoSSHEndpoint.IsPresent)
                 {
-                    var netConfig = role.ConfigurationSets
-                        .OfType<NetworkConfigurationSet>()
-                        .SingleOrDefault();
-
-                    if (netConfig == null)
-                    {
-                        netConfig = new NetworkConfigurationSet
-                        {
-                            InputEndpoints =
-                                new System.Collections.ObjectModel.Collection<InputEndpoint>()
-                        };
-
-                        role.ConfigurationSets.Add(netConfig);
-                    }
-
-                    // Add check in case the settings were imported 
-                    bool addSSH = true;
-
-                    foreach (InputEndpoint ep in netConfig.InputEndpoints)
-                    {
-                        if (string.Compare(ep.Name, "SSH", StringComparison.OrdinalIgnoreCase) == 0 || ep.LocalPort == 22)
-                        {
-                            addSSH = false;
-                            ep.Port = null; // null out to avoid conflicts
-                            break;
-                        }
-                    }
-
-                    if (addSSH)
-                    {
-                        InputEndpoint sshEndpoint = new InputEndpoint();
-                        sshEndpoint.LocalPort = 22;
-                        sshEndpoint.Protocol = "tcp";
-                        sshEndpoint.Name = "SSH";
-                        netConfig.InputEndpoints.Add(sshEndpoint);
-                    }
+                    configSetbuilder.NetworkConfigurationBuilder.AddSshEndpoint();
                 }
             }
             else
             {
-                var provisioningConfiguration = role.ConfigurationSets
-                    .OfType<WindowsProvisioningConfigurationSet>()
-                    .SingleOrDefault();
-                if (provisioningConfiguration == null)
-                {
-                    provisioningConfiguration = new WindowsProvisioningConfigurationSet();
-                    role.ConfigurationSets.Add(provisioningConfiguration);
-                }
-
-                SetProvisioningConfiguration(provisioningConfiguration);
-                provisioningConfiguration.ComputerName = role.RoleName;
+                role.NoRDPEndpoint = NoRDPEndpoint.IsPresent;
+                SetProvisioningConfiguration(configSetbuilder.WindowsConfigurationBuilder.Provisioning);
+                configSetbuilder.WindowsConfigurationBuilder.Provisioning.ComputerName = role.RoleName;
 
                 if (!NoRDPEndpoint.IsPresent)
                 {
-                    var netConfig = role.ConfigurationSets
-                        .OfType<NetworkConfigurationSet>()
-                        .SingleOrDefault();
-
-                    if (netConfig == null)
-                    {
-                        netConfig = new NetworkConfigurationSet();
-                        role.ConfigurationSets.Add(netConfig);
-                    }
-
-                    if (netConfig.InputEndpoints == null)
-                    {
-                        netConfig.InputEndpoints = new System.Collections.ObjectModel.Collection<InputEndpoint>();
-                    }
-
-                    bool addRDP = true;
-
-                    foreach (InputEndpoint ep in netConfig.InputEndpoints)
-                    {
-                        if (string.Compare(ep.Name, "RDP", StringComparison.OrdinalIgnoreCase) == 0 || ep.LocalPort == 3389)
-                        {
-                            addRDP = false;
-                            ep.Port = null; // null out to avoid conflicts
-                            break;
-                        }
-                    }
-
-                    if (addRDP)
-                    {
-                        InputEndpoint rdpEndpoint = new InputEndpoint { LocalPort = 3389, Protocol = "tcp", Name = "RDP" };
-                        netConfig.InputEndpoints.Add(rdpEndpoint);
-                    }
+                    configSetbuilder.NetworkConfigurationBuilder.AddRdpEndpoint();
                 }
 
                 if (!this.DisableWinRMHttps.IsPresent)
                 {
-                    var netConfig = role.ConfigurationSets
-                        .OfType<NetworkConfigurationSet>()
-                        .SingleOrDefault();
-
-                    if (netConfig == null)
-                    {
-                        netConfig = new NetworkConfigurationSet();
-                        role.ConfigurationSets.Add(netConfig);
-                    }
-
-                    if (netConfig.InputEndpoints == null)
-                    {
-                        netConfig.InputEndpoints = new System.Collections.ObjectModel.Collection<InputEndpoint>();
-                    }
-
                     var builder = new WinRmConfigurationBuilder();
                     if (this.EnableWinRMHttp.IsPresent)
                     {
                         builder.AddHttpListener();
                     }
                     builder.AddHttpsListener(this.WinRMCertificate);
-                    provisioningConfiguration.WinRM = builder.Configuration;
 
+                    configSetbuilder.WindowsConfigurationBuilder.Provisioning.WinRM = builder.Configuration;
+    
                     if(!this.NoWinRMEndpoint.IsPresent)
                     {
-                        var winRmEndpoint = new InputEndpoint { LocalPort = WinRMConstants.HttpsListenerPort, Protocol = "tcp", Name = WinRMConstants.EndpointName };
-                        netConfig.InputEndpoints.Add(winRmEndpoint);
+                        configSetbuilder.NetworkConfigurationBuilder.AddWinRmEndpoint();
                     }
                     role.WinRMCertificate = WinRMCertificate;
                 }
@@ -210,24 +110,40 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS
         {
             PersistentVM vm = (PersistentVM)this.VM;
             
-            if (string.Compare(ParameterSetName, "Linux", StringComparison.OrdinalIgnoreCase) == 0 && ValidationHelpers.IsLinuxPasswordValid(Password) == false)
-            {
-                throw new ArgumentException(Resources.PasswordNotComplexEnough);
-            }
+            ValidateLinuxParameterSetParameters(vm);
+            ValidateWindowsParameterSetParameters(vm);
+        }
 
-            if ((string.Compare(ParameterSetName, "Windows", StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(ParameterSetName, "WindowsDomain", StringComparison.OrdinalIgnoreCase) == 0) && ValidationHelpers.IsWindowsPasswordValid(Password) == false)
+        private void ValidateLinuxParameterSetParameters(PersistentVM vm)
+        {
+            if (LinuxParameterSetName.Equals(ParameterSetName, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException(Resources.PasswordNotComplexEnough);
-            }
+                if (!this.NoSSHPassword && ValidationHelpers.IsLinuxPasswordValid(Password) == false)
+                {
+                    throw new ArgumentException(Resources.PasswordNotComplexEnough);
+                }
 
-            if (string.Compare(ParameterSetName, "Linux", StringComparison.OrdinalIgnoreCase) == 0 && ValidationHelpers.IsLinuxHostNameValid(vm.RoleName) == false)
-            {
-                throw new ArgumentException(Resources.InvalidHostName);
+                if (ValidationHelpers.IsLinuxHostNameValid(vm.RoleName) == false)
+                {
+                    throw new ArgumentException(Resources.InvalidHostName);
+                }
             }
+        }
 
-            if ((string.Compare(ParameterSetName, "Windows", StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(ParameterSetName, "WindowsDomain", StringComparison.OrdinalIgnoreCase) == 0) && ValidationHelpers.IsWindowsComputerNameValid(vm.RoleName) == false)
+        private void ValidateWindowsParameterSetParameters(PersistentVM vm)
+        {
+            if (WindowsParameterSetName.Equals(ParameterSetName, StringComparison.OrdinalIgnoreCase) || 
+                WindowsDomainParameterSetName.Equals(ParameterSetName, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException(Resources.InvalidComputerName);
+                if (ValidationHelpers.IsWindowsPasswordValid(Password) == false)
+                {
+                    throw new ArgumentException(Resources.PasswordNotComplexEnough);
+                }
+
+                if (ValidationHelpers.IsWindowsComputerNameValid(vm.RoleName) == false)
+                {
+                    throw new ArgumentException(Resources.InvalidComputerName);
+                }
             }
         }
     }

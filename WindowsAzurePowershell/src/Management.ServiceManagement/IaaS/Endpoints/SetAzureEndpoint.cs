@@ -35,7 +35,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS.Endpoints
             set; 
         }
 
-        [Parameter(Position = 1, Mandatory = true, HelpMessage = "Endpoint protocol.")]
+        [Parameter(Position = 1, Mandatory = false, HelpMessage = "Endpoint protocol.")]
         [ValidateSet("tcp", "udp", IgnoreCase = true)]
         [ValidateNotNullOrEmpty]
         public string Protocol
@@ -44,7 +44,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS.Endpoints
             set; 
         }
 
-        [Parameter(Position = 2, Mandatory = true, HelpMessage = "Local port.")]
+        [Parameter(Position = 2, Mandatory = false, HelpMessage = "Local port.")]
         [ValidateNotNullOrEmpty]
         public int LocalPort
         { 
@@ -93,12 +93,31 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS.Endpoints
                             ErrorCategory.InvalidData,
                             null));
             }
+            
+            if (this.ParameterSpecified("Protocol"))
+            {
+                endpoint.Protocol = this.Protocol;
+            }
+            
+            if (this.ParameterSpecified("LocalPort"))
+            {
+                endpoint.LocalPort = this.LocalPort;
+            }
 
-            endpoint.Port = PublicPort.HasValue ? PublicPort : null;
-            endpoint.LocalPort = LocalPort;
-            endpoint.Protocol = Protocol;
-            endpoint.EndpointAccessControlList = this.ACL;
-            endpoint.EnableDirectServerReturn = this.DirectServerReturn;
+            if (this.ParameterSpecified("PublicPort"))
+            {
+                endpoint.Port = this.PublicPort;
+            }
+
+            if (this.ParameterSpecified("DirectServerReturn"))
+            {
+                endpoint.EnableDirectServerReturn = this.DirectServerReturn;
+            }
+
+            if (this.ParameterSpecified("ACL"))
+            {
+                endpoint.EndpointAccessControlList = this.ACL;
+            }
 
             WriteObject(VM, true);
         }
@@ -150,6 +169,11 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.IaaS.Endpoints
             {
                 throw new ArgumentException(Resources.PortsNotInRangeInSetAzureEndpoint);
             }
+        }
+
+        private bool ParameterSpecified(string parameterName)
+        {
+            return this.MyInvocation.BoundParameters.ContainsKey(parameterName);
         }
     }
 }

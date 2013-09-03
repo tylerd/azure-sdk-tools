@@ -57,6 +57,11 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
         private readonly AccessTokenResult accessToken;
 
         /// <summary>
+        /// The SQL authentication credentials used for this context
+        /// </summary>
+        private readonly SqlAuthenticationCredentials credentials;
+
+        /// <summary>
         /// A collection of entries to be added to each request's header. HTTP headers are case-insensitive. 
         /// </summary>
         private readonly Dictionary<string, string> supplementalHeaderEntries =
@@ -86,16 +91,19 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
         /// <param name="connectionType">The server connection type with the server name</param>
         /// <param name="sessionActivityId">An activity ID provided by the user that should be associated with this session.</param>
         /// <param name="accessToken">The authentication access token to be used for executing web requests.</param>
+        /// <param name="credentials">The SQL authentication credentials used for this context</param>
         private ServerDataServiceSqlAuth(
             Uri managementServiceUri,
             DataServiceConnectionType connectionType,
             Guid sessionActivityId,
-            AccessTokenResult accessToken)
+            AccessTokenResult accessToken,
+            SqlAuthenticationCredentials credentials)
             : base(new Uri(managementServiceUri, connectionType.RelativeEntityUri))
         {
             this.sessionActivityId = sessionActivityId;
             this.connectionType = connectionType;
             this.accessToken = accessToken;
+            this.credentials = credentials;
 
             // Generate a requestId and retrieve the server name
             this.clientRequestId = SqlDatabaseManagementHelper.GenerateClientTracingId();
@@ -186,7 +194,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
             AccessTokenResult.ValidateAccessToken(managementServiceUri, result);
 
             // Create and return a ServerDataService object
-            return Create(managementServiceUri, sessionActivityId, result, serverName);
+            return Create(managementServiceUri, sessionActivityId, result, serverName, credentials);
         }
 
         /// <summary>
@@ -197,12 +205,14 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
         /// <param name="sessionActivityId">An activity ID provided by the user that should be associated with this session.</param>
         /// <param name="accessTokenResult">The accessToken to be used to authenticate the user.</param>
         /// <param name="serverName">The name of the server to connect to. (Optional)</param>
+        /// <param name="credentials">The SQL authentication credentials used for this context</param>
         /// <returns>An instance of <see cref="ServerDataServiceSqlAuth"/> class.</returns>
         public static ServerDataServiceSqlAuth Create(
             Uri managementServiceUri,
             Guid sessionActivityId,
             AccessTokenResult accessTokenResult,
-            string serverName)
+            string serverName,
+            SqlAuthenticationCredentials credentials)
         {
             if (managementServiceUri == null)
             {
@@ -221,7 +231,8 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
                     managementServiceUri,
                     new DataServiceConnectionType(ServerModelConnectionType),
                     sessionActivityId,
-                    accessTokenResult);
+                    accessTokenResult,
+                    credentials);
             }
             else
             {
@@ -229,7 +240,8 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
                     managementServiceUri,
                     new DataServiceConnectionType(ServerModelConnectionType, serverName),
                     sessionActivityId,
-                    accessTokenResult);
+                    accessTokenResult,
+                    credentials);
             }
         }
 
@@ -244,6 +256,17 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Services.Server
 
             XDocument doc = DataConnectionUtility.GetMetadata(this, EnhanceRequest);
             return doc;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="SqlAuthenticationCredentials"/> associated with this context.
+        /// </summary>
+        public SqlAuthenticationCredentials SqlCredentials
+        {
+            get
+            {
+                return this.credentials;
+            }
         }
 
         #region IServerDataServiceContext Members

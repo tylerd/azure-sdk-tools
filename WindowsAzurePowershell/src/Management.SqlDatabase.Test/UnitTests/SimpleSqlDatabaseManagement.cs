@@ -16,6 +16,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests
 {
     using System;
     using System.Xml;
+    using Microsoft.WindowsAzure.Management.SqlDatabase.Services.ImportExport;
     using Microsoft.WindowsAzure.Management.Test.Utilities.Common;
     using Services;
     using VisualStudio.TestTools.UnitTesting;
@@ -418,9 +419,9 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests
         /// </summary>
         /// <param name="subscriptionId">The subscription Id to pass through</param>
         /// <param name="serverName">The server name to pass through</param>
-        /// <param name="input">the input object to pass through</param>
-        /// <param name="callback">the callback object to pass through</param>
-        /// <param name="state">the state object to pass through</param>
+        /// <param name="input">The input object to pass through</param>
+        /// <param name="callback">The callback object to pass through</param>
+        /// <param name="state">The state object to pass through</param>
         /// <returns>An <see cref="IAsyncResult"/> of the mock request</returns>
         public IAsyncResult BeginNewDatabase(
             string subscriptionId, 
@@ -582,7 +583,186 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests
         }
 
         #endregion
-        
+
+        #region Import/Export Database Status
+
+        /// <summary>
+        /// Gets or sets the thunk for ImportExportStatus 
+        /// </summary>
+        public Func<SimpleServiceManagementAsyncResult, ArrayOfStatusInfo> GetImportExporStatusThunk { get; set; }
+
+        /// <summary>
+        /// Begins a mock call to GetImportExportStatus
+        /// </summary>
+        /// <param name="subscriptionId">The subscription Id to pass through</param>
+        /// <param name="serverName">The server name to pass through</param>
+        /// <param name="fullyQualifiedServerName">The fully qualified server name to pass through</param>
+        /// <param name="userName">The userName to pass through</param>
+        /// <param name="password">The password to pass through</param>
+        /// <param name="requestId">The requestId to pass through</param>
+        /// <param name="callback">The callback to pass through</param>
+        /// <param name="state">The state to pass through</param>
+        /// <returns>An <see cref="IAsyncResult"/> of the mock request</returns>
+        public IAsyncResult BeginGetImportExportStatus(
+            string subscriptionId,
+            string serverName,
+            string fullyQualifiedServerName,
+            string userName,
+            string password,
+            string requestId,
+            AsyncCallback callback,
+            object state)
+        {
+            SimpleServiceManagementAsyncResult result = new SimpleServiceManagementAsyncResult();
+            result.Values["subscriptionId"] = subscriptionId;
+            result.Values["serverName"] = serverName;
+            result.Values["fullyQualifiedServerName"] = fullyQualifiedServerName;
+            result.Values["userName"] = userName;
+            result.Values["password"] = password;
+            result.Values["requestId"] = requestId;
+            result.Values["callback"] = callback;
+            result.Values["state"] = state;
+            return result;
+        }
+
+        /// <summary>
+        /// A mock call to EndGetImportExportStatus
+        /// </summary>
+        /// <param name="asyncResult">The result of the mock BeginGetImportExportStatus call</param>
+        /// <returns>A <see cref="ArrayOfStatusInfo"/>: the result of calling the thunk on the input</returns>
+        public ArrayOfStatusInfo EndGetImportExportStatus(IAsyncResult asyncResult)
+        {
+            if (GetImportExporStatusThunk != null)
+            {
+                SimpleServiceManagementAsyncResult result =
+                    asyncResult as SimpleServiceManagementAsyncResult;
+                Assert.IsNotNull(result, "asyncResult was not SimpleServiceManagementAsyncResult!");
+
+                return GetImportExporStatusThunk(result);
+            }
+            else if (ThrowsIfNotImplemented)
+            {
+                throw new NotImplementedException("ExportDatabaseThunk is not implemented!");
+            }
+
+            return default(ArrayOfStatusInfo);
+        }
+
+        #endregion
+
+        #region Import Database
+
+        /// <summary>
+        /// Gets or sets the Thunk for the ImportDatabase opertaion
+        /// </summary>
+        public Func<SimpleServiceManagementAsyncResult, XmlElement> ImportDatabaseThunk { get; set; }
+
+        /// <summary>
+        /// A mock call to BeginImportDatabase
+        /// </summary>
+        /// <param name="subscriptionId">The subscription Id to pass through</param>
+        /// <param name="serverName">The server name to pass through</param>
+        /// <param name="input">The input object to pass through</param>
+        /// <param name="callback">The callback object to pass through</param>
+        /// <param name="state">The state object to pass through</param>
+        /// <returns>An <see cref="IAsyncResult"/> of the mock request</returns>
+        public IAsyncResult BeginImportDatabase(
+            string subscriptionId,
+            string serverName,
+            ImportInput input,
+            AsyncCallback callback,
+            object state)
+        {
+            SimpleServiceManagementAsyncResult result = new SimpleServiceManagementAsyncResult();
+            result.Values["subscriptionId"] = subscriptionId;
+            result.Values["serverName"] = serverName;
+            result.Values["input"] = input;
+            result.Values["callback"] = callback;
+            result.Values["state"] = state;
+            return result;
+        }
+
+        /// <summary>
+        /// A mock call to EndImportDatabase
+        /// </summary>
+        /// <param name="asyncResult">The result of the mock BeginImportDatabase call</param>
+        /// <returns>A <see cref="XmlElement"/>: the result of calling the thunk on the input</returns>
+        public XmlElement EndImportDatabase(IAsyncResult asyncResult)
+        {
+            if (ImportDatabaseThunk != null)
+            {
+                SimpleServiceManagementAsyncResult result =
+                    asyncResult as SimpleServiceManagementAsyncResult;
+                Assert.IsNotNull(result, "asyncResult was not SimpleServiceManagementAsyncResult!");
+
+                return ImportDatabaseThunk(result);
+            }
+            else if (ThrowsIfNotImplemented)
+            {
+                throw new NotImplementedException("ImportDatabaseThunk is not implemented!");
+            }
+
+            return default(XmlElement);
+        }
+
+        #endregion
+
+        #region Export Database
+
+        /// <summary>
+        /// Gets or sets the Thunk used for testing the Export Database functionality
+        /// </summary>
+        public Func<SimpleServiceManagementAsyncResult, XmlElement> ExportDatabaseThunk { get; set; }
+
+        /// <summary>
+        /// Starts a mock call to Begin Export Database.
+        /// </summary>
+        /// <param name="subscriptionId">The subscription Id to pass through</param>
+        /// <param name="serverName">The server name to pass through</param>
+        /// <param name="input">The input object to pass through</param>
+        /// <param name="callback">The callback object to pass through</param>
+        /// <param name="state">The state object to pass through</param>
+        /// <returns>A <see cref="SimpleServiceManagementAsyncResult"/> object</returns>
+        public IAsyncResult BeginExportDatabase(
+            string subscriptionId,
+            string serverName,
+            ExportInput input,
+            AsyncCallback callback,
+            object state)
+        {
+            SimpleServiceManagementAsyncResult result = new SimpleServiceManagementAsyncResult();
+            result.Values["subscriptionId"] = subscriptionId;
+            result.Values["serverName"] = serverName;
+            result.Values["input"] = input;
+            result.Values["callback"] = callback;
+            result.Values["state"] = state;
+            return result;
+        }
+
+        /// <summary>
+        /// Ends the mock call to Export Database
+        /// </summary>
+        /// <param name="asyncResult">The result of calling BeginExportDatabase</param>
+        /// <returns>An XmlElement with the request GUID</returns>
+        public XmlElement EndExportDatabase(IAsyncResult asyncResult)
+        {
+            if (this.ExportDatabaseThunk != null)
+            {
+                SimpleServiceManagementAsyncResult result =
+                    asyncResult as SimpleServiceManagementAsyncResult;
+                Assert.IsNotNull(result, "asyncResult was not SimpleServiceManagementAsyncResult!");
+
+                return this.ExportDatabaseThunk(result);
+            }
+            else if (this.ThrowsIfNotImplemented)
+            {
+                throw new NotImplementedException("ExportDatabaseThunk is not implemented!");
+            }
+
+            return default(XmlElement);
+        }
+        #endregion
+
         #endregion
     }
 }

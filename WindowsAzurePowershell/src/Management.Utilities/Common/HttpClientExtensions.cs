@@ -12,6 +12,8 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 namespace Microsoft.WindowsAzure.Management.Utilities.Common
 {
     using System;
@@ -192,6 +194,35 @@ namespace Microsoft.WindowsAzure.Management.Utilities.Common
             HttpResponseMessage response = client.DeleteAsync(requestUri).Result;
             string content = response.EnsureSuccessStatusCode().Content.ReadAsStringAsync().Result;
             LogResponse(response.StatusCode.ToString(), response.Headers, content, logger);
+        }
+		
+		public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, Action<string> Logger)
+        {
+            AddUserAgent(client);
+			LogRequest(
+				HttpMethod.Get.Method,
+				client.BaseAddress + requestUri,
+				client.DefaultRequestHeaders,
+				string.Empty,
+				Logger);
+			return client.GetAsync(requestUri);
+        }
+
+        public static Task<HttpResponseMessage> PostAsJsonAsyncWithoutEnsureSuccessStatusCode(
+            this HttpClient client,
+            string requestUri,
+            JObject json,
+            Action<string> Logger)
+        {
+            AddUserAgent(client);
+
+            LogRequest(
+                HttpMethod.Post.Method,
+                client.BaseAddress + requestUri,
+                client.DefaultRequestHeaders,
+                JsonConvert.SerializeObject(json, Formatting.Indented),
+                Logger);
+            return client.PostAsJsonAsync(requestUri, json);
         }
     }
 }

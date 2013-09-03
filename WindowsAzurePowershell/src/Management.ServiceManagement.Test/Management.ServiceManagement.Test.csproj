@@ -139,6 +139,7 @@
     <Compile Include="FunctionalTests\AddAzureVhdSASUriTest.cs" />
     <Compile Include="FunctionalTests\AddAzureVhdTest.cs" />
     <Compile Include="FunctionalTests\AzureVhdTest.cs" />
+    <Compile Include="FunctionalTests\BVTTest.cs" />
     <Compile Include="FunctionalTests\ConfigDataInfo\ACLAction.cs" />
     <Compile Include="FunctionalTests\ConfigDataInfo\HostCaching.cs" />
     <Compile Include="FunctionalTests\ConfigDataInfo\InstanceSize.cs" />
@@ -147,6 +148,8 @@
     <Compile Include="FunctionalTests\ConfigDataInfo\SetACLConfig.cs" />
     <Compile Include="FunctionalTests\ConfigDataInfo\VMPowerState.cs" />
     <Compile Include="FunctionalTests\CredentialHelper.cs" />
+    <Compile Include="FunctionalTests\FunctionalTestCommonVhd.cs" />
+    <Compile Include="FunctionalTests\FunctionalTestCommonVM.cs" />
     <Compile Include="FunctionalTests\IaasCmdletInfo\AddAzureCertificateCmdletInfo.cs" />
     <Compile Include="FunctionalTests\IaasCmdletInfo\AddAzureDiskCmdletInfo.cs" />
     <Compile Include="FunctionalTests\IaasCmdletInfo\AddAzureVMImageCmdletInfo.cs" />
@@ -247,6 +250,10 @@
     <Compile Include="FunctionalTests\PaasCmdletInfo\SetAzureServiceRemoteDesktopExtensionCmdletInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FunctionalTests\PIRCmdletInfo\GetAzurePlatformVMImage.cs" />
+    <Compile Include="FunctionalTests\PIRCmdletInfo\RemoveAzurePlatformVMImage.cs" />
+    <Compile Include="FunctionalTests\PIRCmdletInfo\SetAzurePlatformVMImage.cs" />
+    <Compile Include="FunctionalTests\PIRTest.cs" />
     <Compile Include="FunctionalTests\PowershellCore\PowershellCmdletScript.cs" />
     <Compile Include="FunctionalTests\SaveAzureVhdTest.cs" />
     <Compile Include="FunctionalTests\ScenarioTest.cs" />
@@ -282,6 +289,7 @@
     <Compile Include="FunctionalTests\ServiceManagementTest.cs" />
     <Compile Include="FunctionalTests\StopAzureVMTest.cs" />
     <Compile Include="FunctionalTests\Utilities.cs" />
+    <Compile Include="FunctionalTests\Verifiers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -367,6 +375,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Management.ServiceManagement.PlatformImageRepository\Management.ServiceManagement.PlatformImageRepository.csproj">
+      <Project>{6478fa8b-3801-4863-8591-87f0855d5c82}</Project>
+      <Name>Management.ServiceManagement.PlatformImageRepository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Management.ServiceManagement\Management.ServiceManagement.csproj">
       <Project>{E1CA72BA-8374-45F6-904D-FD34ECDF5B6F}</Project>
       <Name>Management.ServiceManagement</Name>

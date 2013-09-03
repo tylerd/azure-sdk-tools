@@ -1,6 +1,21 @@
+2013.08.22 Verion 0.6.19
+* Media Services cmdlets
+  * Get-AzureMediaServicesAccount
+  * New-AzureMediaServicesAccount
+  * Remove-AzureMediaServicesAccount
+  * New-AzureMediaServicesKey
+* SQL Database Import/Export cmdlets
+  * Start-AzureSqlDatabaseImport
+  * Start-AzureSqlDatabaseExport
+  * Get-AzureSqlDatabaseImportExportStatus
+* Platform VM Image cmdlets (need to import the PIR module manually)
+  * Get-AzurePlatformVMImage
+  * Set-AzurePlatformVMImage
+  * Remove-AzurePlatformVMImage
+
 2013.07.31 Version 0.6.18
 * Service Bus authorization rule cmdlets
-  * Add-AzureSBAuthorizationRule
+  * New-AzureSBAuthorizationRule
   * Get-AzureSBAuthorizationRule
   * Set-AzureSBAuthorizationRule
   * Remove-AzureSBAuthorizationRule

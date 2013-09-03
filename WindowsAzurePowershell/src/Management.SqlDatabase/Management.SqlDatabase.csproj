@@ -114,6 +114,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Microsoft.WindowsAzure.ServiceManagement.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -134,6 +137,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="MSSharedLibKey.snk" />
+    <Compile Include="Database\Cmdlet\GetAzureSqlDatabaseImportExportStatus.cs" />
+    <Compile Include="Database\Cmdlet\StartAzureSqlDatabaseImport.cs" />
+    <Compile Include="Database\Cmdlet\StartAzureSqlDatabaseExport.cs" />
     <Compile Include="Database\Cmdlet\GetAzureSqlDatabaseServiceObjective.cs" />
     <Compile Include="Firewall\Cmdlet\SetAzureSqlDatabaseServerFirewallRule.cs" />
     <Compile Include="Firewall\Cmdlet\GetAzureSqlDatabaseServerFirewallRule.cs" />
@@ -172,11 +178,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\Constants.cs" />
+    <Compile Include="Services\ImportExport\BlobCredentials.cs" />
+    <Compile Include="Services\ImportExport\BlobStorageAccessKeyCredentials.cs" />
+    <Compile Include="Services\ImportExport\ConnectionInfo.cs" />
+    <Compile Include="Services\ImportExport\ExportInput.cs" />
+    <Compile Include="Services\ImportExport\ImportInput.cs" />
+    <Compile Include="Services\ImportExport\ImportExportRequest.cs" />
+    <Compile Include="Services\ImportExport\StatusInfo.cs" />
     <Compile Include="Services\ServerQuotaListResponse.cs" />
     <Compile Include="Services\ServerQuotaResponse.cs" />
     <Compile Include="Services\Server\MergeOptionTemporaryChange.cs" />
-    <Compile Include="Services\Server\ServiceObjectiveExtensions.cs" />
-    <Compile Include="Services\Server\DatabaseExtensions.cs" />
+    <Compile Include="Services\Server\ServiceObjectiveExtensions.cs" />    <Compile Include="Services\Server\DatabaseExtensions.cs" />
     <Compile Include="Services\Server\IServerDataServiceContext.cs" />
     <Compile Include="Services\Server\ServerDataService.cs" />
     <Compile Include="Services\Server\ServerDataServiceCertAuth.cs" />
@@ -193,6 +205,7 @@
     <Compile Include="Services\SqlDatabaseFirewallRulesList.cs" />
     <Compile Include="Services\SqlDatabaseInput.cs" />
     <Compile Include="Services\SqlDatabaseList.cs" />
+    <Compile Include="Services\ImportExport\ArrayOfStatusInfo.cs" />
     <Compile Include="Services\SqlDatabaseManagementError.cs" />
     <Compile Include="Services\SqlDatabaseManagementHelper.cs" />
     <Compile Include="Services\SqlDatabaseResponse.cs" />
@@ -207,6 +220,10 @@
     <None Include="Services\Server\UpdateServerDataServiceMetadata.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Management.Storage\Management.Storage.csproj">
+      <Project>{08cf7da7-0392-4a19-b79b-e1ff67cdb81a}</Project>
+      <Name>Management.Storage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Management.Utilities\Management.Utilities.csproj">
       <Project>{4900ec4e-8deb-4412-9108-0bc52f81d457}</Project>
       <Name>Management.Utilities</Name>

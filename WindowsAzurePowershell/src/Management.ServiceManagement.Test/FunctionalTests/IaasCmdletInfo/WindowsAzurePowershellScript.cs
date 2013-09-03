@@ -25,7 +25,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleStorage),
             Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleManagement),
             Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleService),
-            Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleServiceManagement)
+            Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleServiceManagement),
+            Path.Combine(Utilities.windowsAzurePowershellPath, Utilities.windowsAzurePowershellModuleServiceManagementPlatformImageRepository)
         };
 
         public WindowsAzurePowershellScript(List<string> cmdlets) : base(cmdlets, ConstructModules())
@@ -50,7 +51,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
                 new PowershellModule(Utilities.windowsAzurePowershellModuleManagement, Utilities.windowsAzurePowershellPath),
                 new PowershellModule(Utilities.windowsAzurePowershellModuleStorage, Utilities.windowsAzurePowershellPath),
                 new PowershellModule(Utilities.windowsAzurePowershellModuleService, Utilities.windowsAzurePowershellPath),
-                new PowershellModule(Utilities.windowsAzurePowershellModuleServiceManagement, Utilities.windowsAzurePowershellPath)
+                new PowershellModule(Utilities.windowsAzurePowershellModuleServiceManagement, Utilities.windowsAzurePowershellPath),
+                new PowershellModule(Utilities.windowsAzurePowershellModuleServiceManagementPlatformImageRepository, Utilities.windowsAzurePowershellPath)
             };
         }
     }

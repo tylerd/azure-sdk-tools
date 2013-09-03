@@ -86,7 +86,19 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Model
 
         public bool NoExportPrivateKey
         {
-            get; 
+            get;
+            set;
+        }
+
+        public bool NoRDPEndpoint
+        {
+            get;
+            set;
+        }
+        
+        public bool NoSSHEndpoint
+        {
+            get;
             set;
         }
 

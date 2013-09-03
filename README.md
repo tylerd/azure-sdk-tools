@@ -42,6 +42,8 @@ This repository contains a set of PowerShell cmdlets for developers and administ
   * CRUD support for database server, database and firewall rule.
   * Get database server quota.
   * Get/Set database server service objective.
+  * Import data from blob storage to Azure SQL database.
+  * Export data from Azure SQL database to blob storage.
 * Service Bus
   * Manage service bus namespaces.
   * Manage service bus authorization rules on namespace, queue, topic, relay and notification hub.
@@ -52,7 +54,8 @@ This repository contains a set of PowerShell cmdlets for developers and administ
   * Manage VM endpoint, such as CRUD and ACL.
   * Get/Set VM sub net.
   * Manage certificate and SSH key.
-  * PowerShell remoting
+  * PowerShell remoting.
+  * Manage platform VM image for VM image publishers.
 * Deployment
   * Manage deployment, such as CRUD, move, upgrade and restore.
   * Get/Create DNS settings of a deployment.
@@ -61,8 +64,10 @@ This repository contains a set of PowerShell cmdlets for developers and administ
 * Store
   * View available Windows Azure Store Add-On plans.
   * Purchase, view, upgrade and remove Windows Azure Store Add-On instances.
+* Media Services
+  * Manage Media Services including create, update, get and generate key.
 * Utility
-  * Test whether a name is avaiable. Currently support cloud service name, storage account name and service bus namespace name.
+  * Test whether a name is available. Currently support cloud service name, storage account name and service bus namespace name.
   * Get the list of geo locations supported by Azure.
   * Get the list of OS supported by Azure.
   * Direct you to Azure portal.

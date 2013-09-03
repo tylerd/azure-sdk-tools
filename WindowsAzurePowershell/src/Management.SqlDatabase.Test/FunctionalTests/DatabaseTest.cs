@@ -29,6 +29,12 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.FunctionalTests
     public class DatabaseTest
     {
         #region Test Script Locations
+        private string serverLocation;
+        private string containerName;
+        private string storageName;
+        private string accessKey;
+        private string ieServerLocation;
+        private string ieSubscriptionId;
 
         /// <summary>
         /// Scripts for doing context creation tests
@@ -54,6 +60,7 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.FunctionalTests
         /// Tests for doing format validation tests 
         /// </summary>
         private const string FormatValidationScript = @"Database\FormatValidation.ps1";
+        private const string ImportExportScript = @"Database\ImportExportDatabase.ps1";
 
         #endregion
 
@@ -103,12 +110,22 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.FunctionalTests
         public void Setup()
         {
             XElement root = XElement.Load("SqlDatabaseSettings.xml");
+            this.serverLocation = root.Element("ServerLocation").Value;
             this.userName = root.Element("SqlAuthUserName").Value;
             this.password = root.Element("SqlAuthPassword").Value;
             this.manageUrl = root.Element("ManageUrl").Value;
-            this.subscriptionId = root.Element("SubscriptionID").Value;
             this.serializedCert = root.Element("SerializedCert").Value;
+            this.subscriptionId = root.Element("SubscriptionId").Value;
             this.serverName = new Uri(manageUrl).Host.Split('.').First();
+
+            // Import Export parameters
+            XElement importExport = root.Element("ImportExport"); 
+            this.ieServerLocation = importExport.Element("ServerLocation").Value;
+            this.ieSubscriptionId = importExport.Element("SubscriptionId").Value;
+            this.containerName = importExport.Element("ContainerName").Value;
+            this.storageName = importExport.Element("StorageName").Value;
+            this.accessKey = importExport.Element("AccessKey").Value;
+
         }
 
         /// <summary>
@@ -225,6 +242,35 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.FunctionalTests
             Assert.IsTrue(testResult);
 
             OutputFormatValidator.ValidateOutputFormat(outputFile, @"Database\ExpectedFormat.txt");
+        }
+
+        /// <summary>
+        /// Runs the script to test the import and export functionality
+        /// </summary>
+        [TestMethod]
+        [TestCategory("Functional")]
+        public void ImportExportDatabase()
+        {
+            string outputFile = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid() + ".txt");
+
+            string cmdlineArgs =
+                "-UserName \"{0}\" -Password \"{1}\" -SubscriptionId \"{2}\" -SerializedCert \"{3}\" "
+                + "-ContainerName \"{4}\" -StorageName \"{5}\" -StorageAccessKey \"{6}\" "
+                + "-ServerLocation \"{7}\"";
+
+            string arguments = string.Format(
+                CultureInfo.InvariantCulture,
+                cmdlineArgs,
+                this.userName,
+                this.password,
+                this.ieSubscriptionId,
+                this.serializedCert,
+                this.containerName,
+                this.storageName,
+                this.accessKey,
+                this.ieServerLocation);
+            bool testResult = PSScriptExecutor.ExecuteScript(DatabaseTest.ImportExportScript, arguments);
+            Assert.IsTrue(testResult);
         }
     }
 }

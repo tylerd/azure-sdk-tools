@@ -39,6 +39,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
         public const string windowsAzurePowershellModuleManagement = "Microsoft.WindowsAzure.Management.dll";
         public const string windowsAzurePowershellModuleService = "Microsoft.WindowsAzure.Management.Service.dll";
         public const string windowsAzurePowershellModuleServiceManagement = "Microsoft.WindowsAzure.Management.ServiceManagement.dll";
+        public const string windowsAzurePowershellModuleServiceManagementPlatformImageRepository =
+            "Microsoft.WindowsAzure.Management.ServiceManagement.PlatformImageRepository.dll";
 
         private const string tclientPath = "tclient.dll";
         private const string clxtsharPath = "clxtshar.dll";
@@ -111,6 +113,11 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
 
         // AzureQuickVM
         public const string NewAzureQuickVMCmdletName = "New-AzureQuickVM";
+
+        // AzurePlatformVMImage
+        public const string SetAzurePlatformVMImageCmdletName = "Set-AzurePlatformVMImage";
+        public const string GetAzurePlatformVMImageCmdletName = "Get-AzurePlatformVMImage";
+        public const string RemoveAzurePlatformVMImageCmdletName = "Remove-AzurePlatformVMImage";
 
         // AzureRemoteDesktopFile
         public const string GetAzureRemoteDesktopFileCmdletName = "Get-AzureRemoteDesktopFile";
@@ -352,6 +359,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             try
             {
                 fn(name);
+                Console.WriteLine("{0} still exists!", name);
                 return false;
             }
             catch (Exception e)
@@ -375,6 +383,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             try
             {
                 fn(name1, name2);
+                Console.WriteLine("{0}, {1} still exist!", name1, name2);
                 return false;
             }
             catch (Exception e)
@@ -398,6 +407,7 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             try
             {
                 fn(name1, name2, name3);
+                Console.WriteLine("{0}, {1}, {2} still exist!", name1, name2, name3);
                 return false;
             }
             catch (Exception e)
@@ -421,7 +431,8 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
             Assert.IsTrue(BlobUri.TryParseUri(new Uri(blob), out blobPath));
             return new BlobHandle(blobPath, key);
         }
-        public static bool RetryUntilSuccess <T> (Func<T> fn, string errorMessage, int maxTry, int intervalSeconds)
+
+        public static void RetryActionUntilSuccess(Action act, string errorMessage, int maxTry, int intervalSeconds)
         {
             int i = 0;
             while (i < maxTry)
@@ -429,27 +440,60 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
                 try
                 {
 
-                    fn();
-                    return true;
+                    act();
+                    return;
                 }
                 catch (Exception e)
                 {
                     if (e.ToString().Contains(errorMessage))
                     {
+                        Console.WriteLine("{0} error occurs! retrying ...", errorMessage);
+                        Console.WriteLine(e.InnerException.ToString());
                         Thread.Sleep(intervalSeconds * 1000);
                         i++;
                         continue;
                     }
                     else
                     {
+                        Console.WriteLine(e.ToString());
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine(e.InnerException.ToString());
+                        }
                         throw;
                     }
                 }
             }
-            return false;            
         }
 
-        public static X509Certificate2 CreateCertificate(string issuer, string friendlyName, string password)
+        public static X509Certificate2 InstallCert(string certFile, StoreLocation location = StoreLocation.CurrentUser, StoreName name = StoreName.My)
+        {
+            X509Certificate2 cert = new X509Certificate2(certFile);
+            X509Store certStore = new X509Store(name, location);
+            certStore.Open(OpenFlags.ReadWrite);
+            certStore.Add(cert);
+            certStore.Close();
+            Console.WriteLine("Cert, {0}, is installed.", cert.Thumbprint);
+            return cert;
+        }
+
+        public static void UninstallCert(X509Certificate2 cert, StoreLocation location, StoreName name)
+        {
+            try
+            {
+                X509Store certStore = new X509Store(name, location);
+                certStore.Open(OpenFlags.ReadWrite);
+                certStore.Remove(cert);
+                certStore.Close();
+                Console.WriteLine("Cert, {0}, is uninstalled.", cert.Thumbprint);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error during uninstalling the cert: {0}", e.ToString());
+                throw;
+            }
+        }
+        public static X509Certificate2 CreateCertificate(string password, string issuer = "CN=Windows Azure Powershell Test", string friendlyName = "PSTest")
         {
 
             var keyCreationParameters = new CngKeyCreationParameters

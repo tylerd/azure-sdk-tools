@@ -15,6 +15,7 @@
 namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests.Server.Cmdlet
 {
     using System;
+    using System.Globalization;
     using System.Management.Automation;
     using System.Net;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -63,8 +64,8 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests.Server.Cm
   <State>1</State>
 </Error>";
             WebException exception = MockHttpServer.CreateWebException(
-                HttpStatusCode.BadRequest, 
-                errorMessage, 
+                HttpStatusCode.BadRequest,
+                errorMessage,
                 (context) =>
                 {
                     context.Response.Headers.Add(Constants.RequestIdHeaderName, serverRequestId);
@@ -75,11 +76,13 @@ namespace Microsoft.WindowsAzure.Management.SqlDatabase.Test.UnitTests.Server.Cm
                 exception,
                 out requestId);
 
+            string expectedErrorDetails = string.Format(
+                CultureInfo.InvariantCulture,
+                Microsoft.WindowsAzure.Management.SqlDatabase.Properties.Resources.DatabaseManagementErrorFormat,
+                40647,
+                "Subscription '00000000-1111-2222-3333-444444444444' does not have the server 'server0001'.");
             Assert.AreEqual(serverRequestId, requestId);
-            Assert.AreEqual(
-@"Subscription '00000000-1111-2222-3333-444444444444' does not have the server 'server0001'.
-Error Code: 40647",
-                  errorRecord.Exception.Message);
+            Assert.AreEqual(expectedErrorDetails, errorRecord.Exception.Message);
         }
     }
 }

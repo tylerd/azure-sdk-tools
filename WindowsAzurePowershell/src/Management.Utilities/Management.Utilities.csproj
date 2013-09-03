@@ -230,6 +230,15 @@
     <Compile Include="Common\XmlSchema\SubscriptionsData.cs">
       <DependentUpon>SubscriptionsData.xsd</DependentUpon>
     </Compile>
+    <Compile Include="MediaService\IMediaServicesClient.cs" />
+    <Compile Include="MediaService\MediaServicesClient.cs" />
+    <Compile Include="MediaService\MediaServicesUriElements.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\AccountCreationRequest.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\AccountCreationResult.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\AccountKeys.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\MediaServiceAccount.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\MediaServiceAccountDetails.cs" />
+    <Compile Include="MediaService\Services\MediaServicesEntities\PagedSites.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

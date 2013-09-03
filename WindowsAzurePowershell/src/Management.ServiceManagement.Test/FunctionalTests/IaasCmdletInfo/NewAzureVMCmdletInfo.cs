@@ -20,9 +20,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Test.FunctionalTes
 
     public class NewAzureVMCmdletInfo : CmdletsInfo
     {
-        
-        public NewAzureVMCmdletInfo(string serviceName, PersistentVM[] vMs, string vnetName, DnsServer[] dnsSettings, string affinityGroup, 
-            string serviceLabel, string serviceDescription, string deploymentLabel, string deploymentDescription, string location)
+
+        public NewAzureVMCmdletInfo(string serviceName, PersistentVM[] vMs, string vnetName, DnsServer[] dnsSettings,
+            string serviceLabel, string serviceDescription, string deploymentLabel, string deploymentDescription, string location, string affinityGroup)
         {
             this.cmdletName = Utilities.NewAzureVMCmdletName;
 

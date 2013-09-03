@@ -294,6 +294,21 @@ namespace Microsoft.WindowsAzure.ServiceManagement
                 null));
         }
 
+        public static void ShutdownRoles(this IServiceManagement proxy,
+            string subscriptionId,
+            string serviceName,
+            string deploymentName,
+            ShutdownRolesOperation shutdownRolesOperation)
+        {
+            proxy.EndExecuteRoleSetOperation(proxy.BeginExecuteRoleSetOperation(
+                subscriptionId,
+                serviceName,
+                deploymentName,
+                shutdownRolesOperation,
+                null,
+                null));
+        }
+
         public static void StartRole(this IServiceManagement proxy,
             string subscriptionId,
             string serviceName,
@@ -306,6 +321,21 @@ namespace Microsoft.WindowsAzure.ServiceManagement
                 deploymentName,
                 roleInstanceName,
                 new StartRoleOperation(),
+                null,
+                null));
+        }
+
+        public static void StartRoles(this IServiceManagement proxy,
+            string subscriptionId,
+            string serviceName,
+            string deploymentName,
+            StartRolesOperation startRolesOperation)
+        {
+            proxy.EndExecuteRoleSetOperation(proxy.BeginExecuteRoleSetOperation(
+                subscriptionId,
+                serviceName,
+                deploymentName,
+                startRolesOperation,
                 null,
                 null));
         }
@@ -626,11 +656,15 @@ namespace Microsoft.WindowsAzure.ServiceManagement
             return proxy.EndShareOSImage(proxy.BeginShareOSImage(subscriptionId, imageName, permission, null, null));
         }
 
-        public static OSImageDetails GetOSImagWithDetails(this IServiceManagement proxy, string subscriptionId, string imageName)
+        public static OSImageDetails GetOSImageWithDetails(this IServiceManagement proxy, string subscriptionId, string imageName)
         {
             return proxy.EndGetOSImageWithDetails(proxy.BeginGetOSImageWithDetails(subscriptionId, imageName, null, null));
         }
 
+        public static OSImageList QueryOSImages(this IServiceManagement proxy, string subscriptionId, string publisher, string location)
+        {
+            return proxy.EndQueryOSImages(proxy.BeginQueryOSImages(subscriptionId, publisher, location, null, null));
+        }
         #endregion
 
         #region Storage Service

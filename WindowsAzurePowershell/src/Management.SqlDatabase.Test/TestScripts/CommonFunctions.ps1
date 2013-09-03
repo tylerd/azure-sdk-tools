@@ -31,7 +31,7 @@ function Init-TestEnvironment
     $moduleLoaded = Get-Module -Name "Microsoft.WindowsAzure.Management"
     if(!$moduleLoaded)
     {
-        Import-Module .\Microsoft.WindowsAzure.Management.SqlDatabase.Test.psd1
+        Import-Module .\Azure.psd1
     }
     $ConfirmPreference = "Medium"
 }

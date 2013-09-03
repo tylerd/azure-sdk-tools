@@ -15,7 +15,7 @@
 namespace Microsoft.WindowsAzure.Management.ServiceManagement.Model
 {
     using System;
-    using Microsoft.WindowsAzure.Management.Utilities.Common;
+    using Utilities.Common;
 
     public class OSImageContext : ManagementOperationContext
     {
@@ -44,7 +44,9 @@ namespace Microsoft.WindowsAzure.Management.ServiceManagement.Model
         public DateTime? PublishedDate { get; set; }
      
         public bool? IsPremium { get; set; }
-        
+
+        public Uri IconUri { get; set; }
+
         public Uri PrivacyUri { get; set; }
 
         public string RecommendedVMSize { get; set; }

@@ -117,4 +117,21 @@
       </MemberSet>
     </Members>
   </Type>
+  <Type>
+    <Name>Microsoft.WindowsAzure.Management.SqlDatabase.Services.ImportExport.ImportExportRequest</Name>
+    <Members>
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>ServerName</Name>
+              <Name>RequestGuid</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
+    </Members>
+  </Type>
 </Types>
